@@ -1,67 +1,171 @@
-# TB DOT Clinic Finder — Ogun State
+# Ogun DOT Connect
 
-A clean, responsive website to help patients and health workers locate **Directly Observed Therapy (DOT)** clinics for tuberculosis treatment across Ogun State, Nigeria.
+**Free Tuberculosis Testing & Treatment Directory for Ogun State, Nigeria**
+
+A modern, mobile-first public health platform helping patients quickly find free TB DOT (Directly Observed Therapy) clinics across Ogun State. Built for potential adoption by the Ogun State Ministry of Health, NTBLCP, and international health partners.
+
+Inspired by the [Sagamu Primary Health Centres Directory](https://sagamuhealthcentres.com/) developed under the National Health Fellows Programme.
+
+---
 
 ## Features
 
-- 🗺 **Interactive Map** — All 24 clinics plotted with colour-coded markers (green = signage visible, amber = no visible signage)
-- 🔍 **Search & Filter** — Filter by clinic name, ward, LGA, location type, and signage status
-- 📋 **Clinic Cards** — Click any card to zoom to that clinic on the map
-- 📍 **Directions** — One-click Google Maps directions from any device
-- 📱 **Fully Responsive** — Works on mobile, tablet, and desktop
-- ℹ️ **DOT Information** — Clear public health messaging about TB symptoms and treatment
+- 🏥 **DOT Clinic Directory** — 24+ real clinics from the Ogun State PHC database, searchable and filterable
+- 🗺️ **Google Maps Integration** — embedded maps and one-tap directions for every clinic
+- 🔍 **TB Symptom Checker** — quick risk assessment tool with guided referral
+- 📱 **Mobile-First Design** — optimised for low-bandwidth Android phones
+- 💬 **WhatsApp Integration** — floating button + clinic-specific WhatsApp links
+- 🛡️ **Admin Dashboard** — manage clinics, view analytics
+- ⚡ **Next.js 15** — fast, SEO-optimised, statically generated pages
 
-## Files
+---
 
-```
-tb-dot-finder/
-├── index.html   # Main page (structure + layout)
-├── style.css    # All styles
-├── app.js       # Map logic, filtering, interactions
-├── data.js      # Clinic data (24 facilities)
-└── README.md    # This file
-```
+## Tech Stack
 
-## How to Deploy on GitHub Pages
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 15, TypeScript, Tailwind CSS |
+| Database | Supabase (PostgreSQL) |
+| Auth | Supabase Auth |
+| Maps | Google Maps Embed API |
+| Deployment | Vercel |
 
-1. Create a new repository on GitHub (e.g. `tb-dot-finder`)
-2. Upload all four files (`index.html`, `style.css`, `app.js`, `data.js`)
-3. Go to **Settings → Pages**
-4. Under **Source**, select `main` branch and `/ (root)` folder
-5. Click **Save** — your site will be live at `https://yourusername.github.io/tb-dot-finder`
+---
 
-No build tools, no npm, no server required. It runs entirely in the browser.
+## Getting Started
 
-## Updating Clinic Data
+### 1. Clone the repository
 
-All clinic data is in `data.js`. Each entry follows this structure:
-
-```js
-{
-  id: 1,
-  state: "OGUN",
-  lga: "SAGAMU",
-  ward: "SABO AGURA",
-  name: "ARUBA",
-  signage: "Yes",           // "Yes" or "No"
-  locationType: "Semi-Urban", // "Urban", "Semi-Urban", or "Rural"
-  status: "Located and Open",
-  lat: 6.825422,
-  lng: 3.655275
-}
+```bash
+git clone https://github.com/YOUR_USERNAME/ogun-dot-connect.git
+cd ogun-dot-connect
 ```
 
-## Data Source
+### 2. Install dependencies
 
-Facility assessment records for Ogun State TB DOT clinics.
-Verify current status with the Ogun State Ministry of Health or your local government health authority.
+```bash
+npm install
+```
 
-## Dependencies (CDN — no install needed)
+### 3. Set up environment variables
 
-- [Leaflet.js](https://leafletjs.com/) — open-source map library
-- [OpenStreetMap](https://www.openstreetmap.org/) — free map tiles
-- [Google Fonts](https://fonts.google.com/) — DM Serif Display + DM Sans
+```bash
+cp .env.local.example .env.local
+```
+
+Edit `.env.local` with your credentials:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+NEXT_PUBLIC_WHATSAPP_NUMBER=2348000000000
+```
+
+### 4. Set up Supabase
+
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to **SQL Editor** and run the migration script:
+   ```
+   supabase/migrations/001_initial_schema.sql
+   ```
+   This creates all tables and seeds 24 clinic records.
+
+### 5. Run development server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Deployment to Vercel
+
+1. Push your code to GitHub
+2. Go to [vercel.com](https://vercel.com) → New Project → Import from GitHub
+3. Add all environment variables from `.env.local`
+4. Deploy — Vercel detects Next.js automatically
+
+---
+
+## Project Structure
+
+```
+ogun-dot-connect/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                    # Homepage
+│   │   ├── about/page.tsx             # About TB
+│   │   ├── clinics/
+│   │   │   ├── page.tsx               # Clinic directory
+│   │   │   └── [id]/page.tsx          # Clinic detail
+│   │   ├── symptom-checker/           # Symptom assessment tool
+│   │   ├── admin/                     # Admin dashboard
+│   │   └── api/clinics/               # REST API routes
+│   ├── components/
+│   │   ├── layout/                    # Navbar, Footer, WhatsApp button
+│   │   └── clinic/                    # ClinicCard, ClinicFilters
+│   ├── lib/
+│   │   ├── seed-data.ts               # 24 real Ogun PHC clinics
+│   │   ├── supabase.ts                # Supabase client
+│   │   └── utils.ts                   # Helper functions
+│   └── types/index.ts                 # TypeScript definitions
+├── supabase/
+│   └── migrations/001_initial_schema.sql
+└── public/
+```
+
+---
+
+## Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Homepage with hero, symptoms, treatment steps, FAQ |
+| `/clinics` | Searchable clinic directory with filters |
+| `/clinics/[id]` | Individual clinic detail with map and directions |
+| `/about` | Full TB education page |
+| `/symptom-checker` | Interactive symptom assessment |
+| `/admin` | Admin login |
+| `/admin/dashboard` | Clinic management dashboard |
+| `/api/clinics` | REST API — list clinics with filters |
+| `/api/clinics/[id]` | REST API — single clinic |
+
+---
+
+## Clinic Data
+
+All 24 clinics in this release are real Ogun State Primary Health Centres sourced from the [Sagamu PHC Directory](https://sagamuhealthcentres.com/), with coordinates verified from the original dataset. Contact details and opening hours are placeholder values and should be verified with the Ogun State Ministry of Health before public launch.
+
+---
+
+## Phase 2 Roadmap
+
+- [ ] Referral management system
+- [ ] Treatment adherence SMS/WhatsApp reminders
+- [ ] Defaulter tracking for DOT programme managers
+- [ ] Drug stock monitoring dashboard
+- [ ] NGO and donor reporting
+- [ ] Progressive Web App (offline support)
+- [ ] AI-powered patient guidance chatbot
+- [ ] Multi-LGA expansion beyond Sagamu
+
+---
+
+## Acknowledgements
+
+- Built under the **National Health Fellows Programme**
+- Clinic data sourced from the **Sagamu Primary Health Centres Directory**
+- Aligned with **NTBLCP** TB programme guidelines
+- Designed to WHO/UNICEF public health digital standards
+
+---
 
 ## License
 
-Data and code may be freely used and adapted for public health purposes.
+MIT — free to use, adapt, and deploy for public health purposes.
+
+> TB is curable. Treatment is free. Early diagnosis saves lives.
